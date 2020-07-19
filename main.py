@@ -1,17 +1,3 @@
-
-"""
-    Main
-    1 [Start] Generate random population of n chromosomes (suitable solutions for the problem)
-    2 [Fitness] Evaluate the fitness f(x) of each chromosome x in the population
-    3 [New population] Create a new population by repeating following steps until the new population is complete
-        3a[Selection] Select two parent chromosomes from a population according to their fitness (the better fitness, the bigger chance to be selected)
-        3b[Crossover] With a crossover probability cross over the parents to form a new offspring (children). If no crossover was performed, offspring is an exact copy
-        3c[Mutation] With a mutation probability mutate new offspring at each locus (position in chromosome).
-        3d[Accepting] Place new offspring in a new population
-    4 [Replace] Use new generated population for a further run of algorithm
-    5 [Test] If the end condition is satisfied, stop, and return the best solution in current population
-    6 [Loop] Go to step 2
-"""
 import random
 import control
 
@@ -118,6 +104,7 @@ class Simulation:
 
         parent1 = sortedFitnessDic[-1]
         parent2 = sortedFitnessDic[-2]
+        print('parents: ', parent1, parent2)
         return [parent1, parent2]
 
     def crossover(self, parents):
@@ -170,8 +157,7 @@ class Simulation:
     
 
     def main(self):
-
-        for generation in range(self.currentPopulation):
+        for generation in range(self.generations):
             calculatedParams = self.calculating_params(self.currentPopulation)
             self.fitness(calculatedParams)
             parents = self.selection()
@@ -180,7 +166,24 @@ class Simulation:
                 individual = self.crossover(parents)
                 individual = self.mutation(parents, individual)
                 newPopulation.append(individual)
-                print(individual)
             self.currentPopulation = newPopulation
+        
+        finalParets = parents
+        parent1 = finalParets[0][1]
+        print('FINAL ANSWER')
+        print('Parent Index: ', parent1)
+        print('Kp: ', self.currentPopulation[parent1][0])
+        print('Ti: ', self.currentPopulation[parent1][1])
+        print('Td: ', self.currentPopulation[parent1][2])
+        print('ISE: ', calculatedParams[parent1][0])
+        print('RiseTime: ', calculatedParams[parent1][1])
+        print('SettlingTime: ', calculatedParams[parent1][2])
+        print('OverShoot: ', calculatedParams[parent1][3])
+        print('Fitness Value: ', self.fitnessDic[parent1])
+        
+        
+
+        
+
 
 attempt = Simulation(50, 150)
