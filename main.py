@@ -66,7 +66,7 @@ class Simulation:
         return calculatedParams
         
     def fitness(self, calculatedParams):
-        fitnessValues = []
+        self.fitnessDic = {}
         for x in range(self.population):
             ISE = calculatedParams[x][0]
             fitnessVal = 1/ISE
@@ -141,27 +141,46 @@ class Simulation:
             else:
                 return [self.currentPopulation[parent2][0], self.currentPopulation[parent2][1], self.currentPopulation[parent2][2]]
 
-    # def mutation(self, parents, individual):
-    #     parent1 = parents[0]
-    #     parent2 = parents[1]
-    #     random.seed()
-    #     probability = random.random()
-    #     if probability > 0.25:
-    #         return self.currentPopulation[parents[0]]        
-    #     else:
-            
+    def mutation(self, parents, individual):
+        parent1 = parents[0][1]
+        parent2 = parents[1][1]
+        random.seed()
+        probability = random.random()
+        if probability > 0.25:
+            return individual       
+        else:
+            random.seed()
+            probability = random.randint(0, 25)
+            if probability > 0.5:
+                mutatingElement = parent1
+            else:
+                mutatingElement = parent2
 
+            if probability < (25/3):
+                newKp = round(random.uniform(2,18),2)
+                return [newKp, self.currentPopulation[mutatingElement][1], self.currentPopulation[mutatingElement][2]]
+                
+            elif probability < 2*(25/3):
+                newTi = round(random.uniform(1.05, 9.42),2)
+                return [self.currentPopulation[mutatingElement][0], newTi, self.currentPopulation[mutatingElement][2]]
+                
+            else:
+                newTD = round(random.uniform(0.26, 2.37),2)
+                return [self.currentPopulation[mutatingElement][0], self.currentPopulation[mutatingElement][1], newTD]
+    
 
     def main(self):
-        calculatedParams = self.calculating_params(self.initialPopulation)
-        self.fitness(calculatedParams)
-        for generation in range(1):
+
+        for generation in range(self.currentPopulation):
+            calculatedParams = self.calculating_params(self.currentPopulation)
+            self.fitness(calculatedParams)
             parents = self.selection()
             newPopulation = []
             for x in range(self.population):
                 individual = self.crossover(parents)
-                print('individual: ', individual)
-                # individual = self.mutation(parents, individual)
-                # newPopulation.append(individual)
+                individual = self.mutation(parents, individual)
+                newPopulation.append(individual)
+                print(individual)
+            self.currentPopulation = newPopulation
 
 attempt = Simulation(50, 150)
