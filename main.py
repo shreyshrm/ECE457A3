@@ -74,19 +74,59 @@ class Simulation:
         return
 
     def selection(self):
-        sortedFitnessDic = sorted(((k) for k,v in self.fitnessDic.items()))
+        #tournament style
+
+        sortedFitnessDic = sorted([(v,k) for k,v in self.fitnessDic.items()])
+        
+        #keep 16 best parents
+        for x in range(34):
+            sortedFitnessDic.pop(0)
+
+        tempList = []
+        for x in range(8):
+            y = 2*x
+            random.seed()
+            probability = random.random()
+            if probability < 0.5:
+                tempList.append(sortedFitnessDic[y])
+            else:
+                tempList.append(sortedFitnessDic[y+1])
+        sortedFitnessDic = tempList
+
+        tempList = []
+        for x in range(4):
+            y = 2*x
+            random.seed()
+            probability = random.random()
+            if probability < 0.5:
+                tempList.append(sortedFitnessDic[y])
+            else:
+                tempList.append(sortedFitnessDic[y+1])
+        sortedFitnessDic = tempList
+
+        tempList = []
+        for x in range(2):
+            y = 2*x
+            random.seed()
+            probability = random.random()
+            if probability < 0.5:
+                tempList.append(sortedFitnessDic[y])
+            else:
+                tempList.append(sortedFitnessDic[y+1])
+        sortedFitnessDic = tempList
+        
+
         parent1 = sortedFitnessDic[-1]
         parent2 = sortedFitnessDic[-2]
-        print('parents: ', parent1, parent2)
         return [parent1, parent2]
 
     def crossover(self, parents):
-        parent1 = parents[0]
-        parent2 = parents[1]
+        parent1 = parents[0][1]
+        parent2 = parents[1][1]
         random.seed()
         probability = random.random()
         if probability > 0.6:
-            return self.currentPopulation[parents[0]]        
+            return self.currentPopulation[parent1]        
         else:
             if probability >= 0.5:
                 return [self.currentPopulation[parent1][0], self.currentPopulation[parent1][1], self.currentPopulation[parent1][2]]
@@ -100,6 +140,15 @@ class Simulation:
                 return [self.currentPopulation[parent2][0], self.currentPopulation[parent1][1], self.currentPopulation[parent2][2]]
             else:
                 return [self.currentPopulation[parent2][0], self.currentPopulation[parent2][1], self.currentPopulation[parent2][2]]
+
+    # def mutation(self, parents, individual):
+    #     parent1 = parents[0]
+    #     parent2 = parents[1]
+    #     random.seed()
+    #     probability = random.random()
+    #     if probability > 0.25:
+    #         return self.currentPopulation[parents[0]]        
+    #     else:
             
 
 
